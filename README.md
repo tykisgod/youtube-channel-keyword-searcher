@@ -34,4 +34,4 @@ So in this case, we can get approximately at most 2*50 results for each channel-
 
 4. Click the link (or copy and paste in the browser) and use your Google account to login.
 5. Copy and paste the authorization code shows in browser to the console.
-5. If it runs well, a file named like **search_result_Mon Nov 19 17/51/54 2018_.csv** will be generated in the current directory
+5. If it runs well, for each channel-keyword pair, a file named like **channel_universalmusicgroup_keyword_taylor_result_at_2018-11-20 12/56/58_.csv** will be generated in the current directory
