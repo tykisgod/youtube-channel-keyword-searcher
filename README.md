@@ -9,16 +9,16 @@ Search video info by give keywords and channel name.
 
 `pip install --upgrade google-auth google-auth-oauthlib google-auth-httplib2`
 
-3. Put the file **client_secret.json** in the same directory of **youtube_video_info_searcher.py**. (Read 'Before you start' section in this [page](https://developers.google.com/youtube/v3/getting-started) if you want to use your own credentials instead of existing one)
+3. Put the file **client_secret.json** in the same directory of **youtube_channel_keyword_searcher.py**. (Read 'Before you start' section in this [page](https://developers.google.com/youtube/v3/getting-started) if you want to use your own credentials instead of existing one)
 
 # Quickstart
 1. Create a CSV file in the format of **example.csv** which provides channel names and keywords (this file has no header). In this example, let's name it **example.csv**
 
      But you should notice that the channel name in the first column of this csv file should be the name in its url. Say, the channel name of UMG should be **universalmusicgroup** in the last part of the channel url: https://www.youtube.com/user/universalmusicgroup instead of the name 'Universal Music Group' shows in that page.
 
-2. Run the command at the directory of **youtube_video_info_searcher.py**
+2. Run the command at the directory of **youtube_channel_keyword_searcher.py**
 
-`python youtube_video_info_searcher.py example.csv 2`
+`python youtube_channel_keyword_searcher.py example.csv 2`
 
 The first parameter **example.csv** indicates the file name which contains the channel and keywords information.
 
