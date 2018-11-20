@@ -13,6 +13,7 @@ def read_channel_keywords(channel_keyword_csv, search_list):
     with open(channel_keyword_csv, 'r', encoding='utf-8-sig') as f:
         reader = csv.reader(f)
         for row in reader:
+            print(row)
             search_list.append([row[0], row[1]])
 
 
@@ -52,10 +53,10 @@ def get_videos_list_by_id(client, **kwargs):
     return response
 
 
-def get_all_channel_info(search_list, service, part, restype, maxResults, raw_video_list, pages, final_video_list):
-    def get_final_video_list(service, part, channel_name, q, restype, channelId, maxResults, raw_video_list, pages,
-                             final_video_list):
-        def get_raw_video_list_by_keyword(service, part, q, restype, channelId, maxResults, raw_video_list, pages):
+def get_all_channel_info(search_list, service, part, restype, maxResults, raw_video_list, pages):
+    # this function runs for each channel-keyword pair
+    def get_final_video_list(channel_name, q, channelId):
+        def get_raw_video_list_by_keyword(pages):
             response = get_video_list_by_keyword(service,
                                                  part=part,
                                                  q=q,
@@ -78,7 +79,8 @@ def get_all_channel_info(search_list, service, part, restype, maxResults, raw_vi
                 pages -= 1
             return raw_video_list
 
-        get_raw_video_list_by_keyword(service, part, q, restype, channelId, maxResults, raw_video_list, pages)
+        get_raw_video_list_by_keyword(pages)
+        final_video_list = list()
         for video in raw_video_list:
             temp_video_dict = dict()
             video_response = get_videos_list_by_id(service,
@@ -91,19 +93,22 @@ def get_all_channel_info(search_list, service, part, restype, maxResults, raw_vi
             temp_video_dict['view_count'] = video_response['items'][0]['statistics']['viewCount']
             temp_video_dict['url'] = 'https://www.youtube.com/watch?v=' + video_response['items'][0]['id']
             temp_video_dict['crawl_time'] = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
             final_video_list.append(temp_video_dict)
+        return final_video_list
 
     for keyword in search_list:
         channel_ID = get_channelID_by_username(service,
                                                part='contentDetails',
                                                forUsername=keyword[0])
-        get_final_video_list(service, part, keyword[0], keyword[1], restype, channel_ID, maxResults, raw_video_list,
-                             pages,
-                             final_video_list)
+        search_result_csv = 'channel_' + keyword[0] + '_keyword_' + keyword[1] + '_result_at_' + str(
+            time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + '_.csv'
+        result_list = get_final_video_list(keyword[0], keyword[1], channel_ID)
+
+        generate_result_csv(search_result_csv, result_list)
 
 
 if __name__ == '__main__':
-    search_result_csv = 'search_result_' + str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + '_.csv'
     channel_keyword_csv = sys.argv[1]
     search_list = list()
     CLIENT_SECRETS_FILE = "client_secret.json"
@@ -120,10 +125,7 @@ if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     service = get_authenticated_service()
     raw_video_list = list()
-    final_video_list = list()
 
     read_channel_keywords(channel_keyword_csv, search_list)
     get_all_channel_info(search_list, service, part, restype, results_per_page, raw_video_list,
-                         pages,
-                         final_video_list)
-    generate_result_csv(search_result_csv, final_video_list)
+                         pages)
