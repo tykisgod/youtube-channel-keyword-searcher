@@ -34,4 +34,4 @@ So in this case, we can get at most 2*50 results for each channel-keyword pair. 
 
 4. Click the link (or copy and paste in the browser) and use your Google account to login.
 5. Copy and paste the authorization code shows in browser to the console.
-5. If it runs well, for each channel-keyword pair, a file named like **channel_universalmusicgroup_keyword_taylor_result_at_2018-11-20 12/56/58_.csv** will be generated in the current directory
+5. If it runs well, for each channel-keyword pair, a file named like **channel_universalmusicgroup_keyword_taylor_result_at_2018-11-20 12/56/58_.csv** will be generated in the current directory. The default order of the results is based on relevance
