@@ -127,6 +127,7 @@ if __name__ == '__main__':
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     service = get_authenticated_service()
 
+    print('Start collecting data...')
     read_channel_keywords(channel_keyword_csv, search_list)
     get_all_channel_info(search_list, service, part, restype, results_per_page, pages)
     print('Finished!')
