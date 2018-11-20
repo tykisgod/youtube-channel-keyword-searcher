@@ -18,11 +18,13 @@ Search video info by give keywords and channel name.
 
 2. Run the command at the directory of **youtube_video_info_searcher.py**
 
-`python youtube_video_info_searcher.py example.csv 100`
+`python youtube_video_info_searcher.py example.csv 2`
 
 The first parameter **example.csv** indicates the file name which contains the channel and keywords information.
 
-The second parameter **100** indicates the approximately max number of results for each channel-keywords pair. The actual number of results may be more or less than the number you expect.
+The second parameter **2** is the max page number (each page contains at most 50 results) which indicates the approximately max number of results for each channel-keywords pair. The actual number of results may be more or less than the number you expect. 
+
+So in this case, we can get approximately at most 2*50 results for each channel-keyword pair. We have 2 channel-keyword pairs in **example.csv**, so we will have at most 2\*2\*50 = 200 results in the output csv file.
 
 3. The console will show a link like:
 
