@@ -2,6 +2,7 @@ import os
 import time
 import google.oauth2.credentials
 import csv
+import sys
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -19,7 +20,7 @@ def read_channel_keywords(channel_keyword_csv, search_list):
 def generate_result_csv(search_result_csv, final_video_list):
     with open(search_result_csv, 'w', encoding='utf-8-sig') as f:
         w = csv.writer(f)
-        w.writerow(['Channel', 'Keyword', 'Title', 'Publish Time', 'View Count', 'URL'])
+        w.writerow(['Channel', 'Keyword', 'Title', 'Publish Time', 'View Count', 'URL', 'Crawl Time'])
         for result in final_video_list:
             w.writerow([result[key] for key in result.keys()])
 
@@ -89,6 +90,7 @@ def get_all_channel_info(search_list, service, part, restype, maxResults, raw_vi
             temp_video_dict['publish_time'] = video_response['items'][0]['snippet']['publishedAt']
             temp_video_dict['view_count'] = video_response['items'][0]['statistics']['viewCount']
             temp_video_dict['url'] = 'https://www.youtube.com/watch?v=' + video_response['items'][0]['id']
+            temp_video_dict['crawl_time'] = str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
             final_video_list.append(temp_video_dict)
 
     for keyword in search_list:
@@ -101,8 +103,8 @@ def get_all_channel_info(search_list, service, part, restype, maxResults, raw_vi
 
 
 if __name__ == '__main__':
-    search_result_csv = 'search_result_' + str(time.asctime(time.localtime(time.time()))) + '_.csv'
-    channel_keyword_csv = 'channel_keywords.csv'
+    search_result_csv = 'search_result_' + str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + '_.csv'
+    channel_keyword_csv = sys.argv[1]
     search_list = list()
     CLIENT_SECRETS_FILE = "client_secret.json"
     SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
@@ -111,8 +113,8 @@ if __name__ == '__main__':
     keyword = 'pokemon'
     channel_name = 'IGNentertainment'
     order = 'date'
-    results_per_page = 50
-    pages = 2
+    results_per_page = 1
+    pages = int(sys.argv[2])
     part = 'snippet'
     restype = 'video'
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
