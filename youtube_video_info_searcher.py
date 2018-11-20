@@ -113,7 +113,7 @@ if __name__ == '__main__':
     keyword = 'pokemon'
     channel_name = 'IGNentertainment'
     order = 'date'
-    results_per_page = 1
+    results_per_page = 50
     pages = int(sys.argv[2])
     part = 'snippet'
     restype = 'video'
