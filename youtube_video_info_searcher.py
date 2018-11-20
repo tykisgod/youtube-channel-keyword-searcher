@@ -13,7 +13,6 @@ def read_channel_keywords(channel_keyword_csv, search_list):
     with open(channel_keyword_csv, 'r', encoding='utf-8-sig') as f:
         reader = csv.reader(f)
         for row in reader:
-            print(row)
             search_list.append([row[0], row[1]])
 
 
@@ -53,10 +52,11 @@ def get_videos_list_by_id(client, **kwargs):
     return response
 
 
-def get_all_channel_info(search_list, service, part, restype, maxResults, raw_video_list, pages):
+def get_all_channel_info(search_list, service, part, restype, maxResults, pages):
     # this function runs for each channel-keyword pair
     def get_final_video_list(channel_name, q, channelId):
         def get_raw_video_list_by_keyword(pages):
+            raw_video_list=list()
             response = get_video_list_by_keyword(service,
                                                  part=part,
                                                  q=q,
@@ -79,7 +79,8 @@ def get_all_channel_info(search_list, service, part, restype, maxResults, raw_vi
                 pages -= 1
             return raw_video_list
 
-        get_raw_video_list_by_keyword(pages)
+        raw_video_list = get_raw_video_list_by_keyword(pages)
+
         final_video_list = list()
         for video in raw_video_list:
             temp_video_dict = dict()
@@ -102,10 +103,11 @@ def get_all_channel_info(search_list, service, part, restype, maxResults, raw_vi
                                                part='contentDetails',
                                                forUsername=keyword[0])
         search_result_csv = 'channel_' + keyword[0] + '_keyword_' + keyword[1] + '_result_at_' + str(
-            time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + '_.csv'
+            time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + '.csv'
         result_list = get_final_video_list(keyword[0], keyword[1], channel_ID)
 
         generate_result_csv(search_result_csv, result_list)
+        print(search_result_csv + ' has been generated, please wait..')
 
 
 if __name__ == '__main__':
@@ -124,8 +126,7 @@ if __name__ == '__main__':
     restype = 'video'
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     service = get_authenticated_service()
-    raw_video_list = list()
 
     read_channel_keywords(channel_keyword_csv, search_list)
-    get_all_channel_info(search_list, service, part, restype, results_per_page, raw_video_list,
-                         pages)
+    get_all_channel_info(search_list, service, part, restype, results_per_page, pages)
+    print('Finished!')
